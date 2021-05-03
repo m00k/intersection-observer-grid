@@ -9,3 +9,4 @@ describe('Initial Test of the App', () => {
         expect(context.find('#preact_root').exists()).toBeTruthy();
     });
 });
+

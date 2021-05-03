@@ -1,4 +1,5 @@
 import { FunctionalComponent, h } from 'preact';
+import * as VM from '../api/model';
 
 const App: FunctionalComponent = () => {
     return (
