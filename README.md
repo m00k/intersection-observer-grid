@@ -1,4 +1,4 @@
-# intection-observer-grid
+# intersection-observer-grid
 
 ## CLI Commands
 *   `npm install`: Installs dependencies

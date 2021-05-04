@@ -1,6 +1,6 @@
 {
-  "name": "intection-observer-grid",
-  "short_name": "intection-observer-grid",
+  "name": "intersection-observer-grid",
+  "short_name": "intersection-observer-grid",
   "start_url": "/",
   "display": "standalone",
   "orientation": "portrait",
