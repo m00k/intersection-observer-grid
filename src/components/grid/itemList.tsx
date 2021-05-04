@@ -1,17 +1,19 @@
 
-import { FunctionComponent, h, Fragment } from 'preact';
+import { FunctionComponent, h } from 'preact';
+import * as VM from '../../api/model';
+import style from './style.css';
 
 export interface ItemListProps {
-
+    items: Array<VM.Item>;
 }
 
 const ItemList: FunctionComponent<ItemListProps> = ({
-    ...props
+    children
 }) => {
     return (
-        <Fragment>
-            TODO
-        </Fragment>
+        <article className={style.itemList}>
+            {children}
+        </article>
     );
 }
 

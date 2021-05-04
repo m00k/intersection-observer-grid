@@ -1,17 +1,21 @@
-import { FunctionComponent, h, Fragment } from 'preact';
+import { FunctionComponent, h } from 'preact';
+import * as VM from '../../api/model';
+import style from './style.css';
 
 export interface ItemDetailProps {
-
+    item: VM.Item;
 }
 
 const ItemDetail: FunctionComponent<ItemDetailProps> = ({
-    ...props
+    item
 }) => {
+    const { name, category } = item;
     return (
-        <Fragment>
-            TODO
-        </Fragment>
+        <section class={style.itemDetail}>
+            <h3>{category.name}</h3>
+            <p>{name}</p>
+        </section>
     );
 }
 
-export default ItemDetail
+export default ItemDetail;
