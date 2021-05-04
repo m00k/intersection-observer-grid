@@ -7,7 +7,7 @@ const rangeFn = <T>(l: number) =>
             .fill(0)
             .map(fn);
 
-const CATEGORIES_TOTAL = 16;
+export const CATEGORIES_TOTAL = 16;
 const MULTIPLIER = 3;
 const categoryFn: Factory<VM.Category> = (_, id) => ({ id, name: `Category_${id}` });
 export const categories: Array<VM.Category> = rangeFn<VM.Category>(CATEGORIES_TOTAL)(categoryFn);
