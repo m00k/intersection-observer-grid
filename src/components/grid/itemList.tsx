@@ -11,10 +11,10 @@ const ItemList: FunctionComponent<ItemListProps> = ({
     children
 }) => {
     return (
-        <article className={style.itemList}>
+        <ul className={style.itemList}>
             {children}
-        </article>
+        </ul>
     );
 }
 
-export default ItemList
+export default ItemList;

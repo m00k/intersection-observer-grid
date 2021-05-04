@@ -3,14 +3,38 @@
 }
 
 .header {
+    background-color: cadetblue;
+    border-radius: .2rem;
+    color: white;
     display: block;
-    overflow: auto;
+    font-weight: bold;
+    font-size: large;
+    overflow: hidden;
+    padding: 1rem;
+}
+
+.header > a {
+    padding: .5rem;
+    text-decoration: none;
+    text-transform: uppercase;
+}
+
+.header > a:visited {
+    color: unset;
 }
 
 .itemDetail {
-
+    background-color: #ccc;
+    border-radius: .2rem;
+    display: grid;
+    min-height: 200px;
+    place-items: center;
 }
 
 .itemList {
-
+    display: grid;
+    list-style: none;
+    padding: 0;
+    grid-gap: .5rem;
+    grid-template-columns: 1fr 1fr 1fr;
 }

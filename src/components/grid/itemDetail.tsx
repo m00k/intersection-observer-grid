@@ -11,10 +11,10 @@ const ItemDetail: FunctionComponent<ItemDetailProps> = ({
 }) => {
     const { name, category } = item;
     return (
-        <section class={style.itemDetail}>
+        <li class={style.itemDetail}>
             <h3>{category.name}</h3>
             <p>{name}</p>
-        </section>
+        </li>
     );
 }
 
