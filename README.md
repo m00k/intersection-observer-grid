@@ -1,5 +1,45 @@
 # intersection-observer-grid
 
+## forces
+    - scroll
+    - navigate
+    - resize
+    - load page
+
+## actors
+### page
+    - handleFirstRender:
+        - get feed data
+
+### container
+    - handeFirstRender
+        - if (!location.hash) setLocationHash
+        - setActiveCat
+    - handleActiveCatChanged
+        - setLocationHash
+        - setActiveCat
+
+### nav
+    - prev, next, nav clicked:
+        - dispatch activeCatChanged({index, target})
+    - handleActiveCatChanged:
+        - if (target !== self) scrollIntoView()
+    - handleResize:
+        - scrollIntoView()
+
+### grid
+    - scroll: 
+        - intersection observer -> dispatch activeCatChanged({index, target}) once settled (delay, throttle) to prevent race condition w/ nav
+    - handleResize:
+        - scrollIntoView()
+    - handleActiveCatChanged:
+        - if (target !== self) scrollIntoView()
+
+## Notes
+- [iOS does not support smooth behavior](https://caniuse.com/?search=scrollintoview)
+- [Element.scrollIntoView](https://developer.mozilla.org/en-US/docs/Web/API/Element/scrollIntoView)
+- [Element.scrollIntoViewIfNeeded](https://developer.mozilla.org/en-US/docs/Web/API/Element/scrollIntoViewIfNeeded) - iOS
+
 ## CLI Commands
 *   `npm install`: Installs dependencies
 
