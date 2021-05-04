@@ -3,14 +3,22 @@
 }
 
 .header {
-    background-color: cadetblue;
-    border-radius: .2rem;
+    background-color: #4A148C;
     color: white;
     display: block;
     font-weight: bold;
-    font-size: large;
-    overflow: hidden;
-    padding: 1rem;
+    font-size: x-large;
+    overflow-x: auto;
+    padding: 2rem;
+    position: sticky;
+    top: 0;
+}
+
+@media screen and (max-width: 1024px) {
+    .header {
+        font-weight: large;
+        padding: 1rem;
+    }
 }
 
 .header > a {
@@ -24,8 +32,8 @@
 }
 
 .itemDetail {
-    background-color: #ccc;
     border-radius: .2rem;
+    box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
     display: grid;
     min-height: 200px;
     place-items: center;
@@ -34,7 +42,7 @@
 .itemList {
     display: grid;
     list-style: none;
-    padding: 0;
+    padding: 0 .25rem;
     grid-gap: .5rem;
     grid-template-columns: 1fr 1fr 1fr;
 }
