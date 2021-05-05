@@ -1,6 +1,6 @@
 import { FunctionalComponent, h } from 'preact';
 import Grid from '../../components/grid';
-import { categories, items } from '../../api';
+import { categories, categoriesWithItems } from '../../api';
 import { useRef } from 'preact/hooks';
 import { useIntersectionObserver } from '../../components/grid/useIntersectionObserver';
 
@@ -13,10 +13,16 @@ const GridBlock: FunctionalComponent = () => {
 
     return (
         <Grid.Container ref={containerRef}>
-            <Grid.Header {...{categories}} />
-            <Grid.ItemList {...{items}}>
-                {items.map(item => (<Grid.ItemDetail key={item.id} {...{item}} />))}
-            </Grid.ItemList>
+            <Grid.Header {...{ categories }} />
+            {categories.map(category => (
+                <Grid.Category key={category.id} {...{ category }}>
+                    <Grid.ItemList>
+                        {categoriesWithItems[category.id].map(item => (
+                            <Grid.ItemDetail key={item.id} {...{ item }} />)
+                        )}
+                    </Grid.ItemList>                
+                </Grid.Category>
+            ))}
         </Grid.Container>
     );
 };

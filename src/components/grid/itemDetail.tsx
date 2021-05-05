@@ -9,11 +9,10 @@ export interface ItemDetailProps {
 const ItemDetail: FunctionComponent<ItemDetailProps> = ({
     item
 }) => {
-    const { name, category } = item;
+    const { name } = item;
     return (
         <li class={style.itemDetail}>
-            <h3>{category.name}</h3>
-            <p>{name}</p>
+            {name}
         </li>
     );
 }
