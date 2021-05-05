@@ -6,9 +6,9 @@ export interface WithDataProps {
 
 }
 
-const WithData: FunctionComponent<WithDataProps> = ({
-    ...props
-}) => {
+const WithData: FunctionComponent<WithDataProps> = (
+    
+) => {
     return (
         <Fragment>
             TODO

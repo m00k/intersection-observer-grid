@@ -10,7 +10,7 @@ export interface CategoryProps {
     children: ComponentChildren;
 }
 
-const log: (name: string) => IntersectionObserverCallback = name => (entries: IntersectionObserverEntry[]) => {
+const log: (name: string) => IntersectionObserverCallback = name => (entries: IntersectionObserverEntry[]): void => {
     // TODO (cb):
     // multiply the intersection ratio of a category with the number of items
     // to get a more accurate result?
