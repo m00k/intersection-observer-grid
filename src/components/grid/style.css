@@ -33,6 +33,7 @@
 }
 
 .header > a {
+    color: #fff;
     padding: .5rem;
     text-decoration: none;
     text-transform: uppercase;

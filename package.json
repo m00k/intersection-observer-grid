@@ -9,7 +9,8 @@
     "dev": "preact watch --sw=false",
     "dev:ssl": "preact watch --https",
     "lint": "eslint 'src/**/*.{js,jsx,ts,tsx}'",
-    "test": "jest ./tests"
+    "test": "jest ./tests",
+    "prepare-gh-pages": "rm .gh-pages -rf && mkdir .gh-pages && npm run build && cp -r build/* .gh-pages/ && cp .gitignore .gh-pages"
   },
   "eslintConfig": {
     "parser": "@typescript-eslint/parser",
