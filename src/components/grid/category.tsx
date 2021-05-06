@@ -1,5 +1,5 @@
 import { ComponentChildren, FunctionComponent, h, RefObject } from 'preact';
-import { useCallback, useRef } from 'preact/hooks';
+import { useRef } from 'preact/hooks';
 import * as VM from '../../api/model';
 import { useIntersectionObserver } from '../../components/grid/useIntersectionObserver';
 import style from './style.css';
@@ -22,7 +22,6 @@ const Category: FunctionComponent<CategoryProps> = ({
     const options: IntersectionObserverInit = { root: containerRef.current, threshold }
     const ref = useRef<HTMLElement>()
     useIntersectionObserver(ref, onIntersectionChanged, options)
-
     return (
         <section ref={ref} class={style.category}>
             <h3>{name}</h3>

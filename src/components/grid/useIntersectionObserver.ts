@@ -10,11 +10,12 @@ export const useIntersectionObserver = (
     useEffect(() => {
         const node = ref.current;
         const observer = new IntersectionObserver(callback, options)
-        if (node) observer.observe(node)        
+        if (node) observer.observe(node)
 
         return (): void => {
-            console.log('###########', 'unobserve', node)
             if (node) observer.disconnect()
         }
-    }, [ref, callback, options])
+        // TODO (cb): options.root is changing on re-render, so is callback
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [ref]) 
 }

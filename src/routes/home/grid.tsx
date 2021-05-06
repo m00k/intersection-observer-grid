@@ -18,28 +18,24 @@ type IntersectionTarget =
 
 const GridBlock: FunctionalComponent = () => {
     const containerRef = useRef<HTMLElement>()
-    const [activeCategoryIndex, setActiveCategoryIndex] = useState(0)
-    const [intersectionTarget, setIntersectionTarget] = useState(null)
+    const [, setActiveCategoryIndex] = useState(0)
+    // const [intersectionTarget, setIntersectionTarget] = useState(null)
     const intersectionEntriesRef = useRef<IntersectionObserverEntry[]>(categories.map(_ => ({ intersectionRatio: 0 } as IntersectionObserverEntry)))
-    const intersectionObserverTimeoutRef = useRef<number>(-1)
     const intersectionObserverCallback = (index: number, entries: IntersectionObserverEntry[]): void => {
         const entry = entries?.[0]
     
         intersectionEntriesRef.current[index] = entry
         const intersectionEntries = intersectionEntriesRef.current
-        const newActiveCategoryIndex: number = intersectionEntries
-            .reduce((acc, curr, i, arr) => {
-                return arr[acc].intersectionRatio >= curr.intersectionRatio
-                    ? acc
-                    : i
-            }, activeCategoryIndex)
-
-        if (intersectionObserverTimeoutRef.current) window.clearTimeout(intersectionObserverTimeoutRef.current)
-        intersectionObserverTimeoutRef.current = window.setTimeout(() => {
-            console.log(`%cactive category index: ${newActiveCategoryIndex}`, baseStyles)
-            // TODO (cb):
-            // setActiveCategoryIndex(newActiveCategoryIndex)
-        }, 100)
+        setActiveCategoryIndex(curr => {
+            const next = intersectionEntries
+                .reduce((acc, curr, i, arr) => {
+                    return arr[acc].intersectionRatio >= curr.intersectionRatio
+                        ? acc
+                        : i
+                }, curr)
+            console.log(`%cactive category index: ${next}`, baseStyles)
+            return next
+        });
     }
     const handleIntersectionChangedFn = (index: number): IntersectionObserverCallback => 
         (entries: IntersectionObserverEntry[]) => intersectionObserverCallback(index, entries)
