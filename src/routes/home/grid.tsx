@@ -19,10 +19,11 @@ type IntersectionTarget =
 const calcMaxIntersectionRatio = (intersectionEntries: IntersectionObserverEntry[], currMax: number): number => {
     return intersectionEntries
         .reduce((acc, curr, i, arr) => {
-            return arr[acc].intersectionRatio >= curr.intersectionRatio
-                ? acc
-                : i;
-        }, currMax);
+            const accRatio = arr[acc].intersectionRatio;
+            const currRatio = curr.intersectionRatio;
+            if (accRatio === currRatio) return acc < i ? acc : i
+            return accRatio >= currRatio ? acc : i
+        }, currMax)
 }
 
 const useHandleCategoryIntersectionChanged = (
@@ -40,11 +41,12 @@ const useHandleCategoryIntersectionChanged = (
 const GridBlock: FunctionalComponent = () => {
     const containerRef = useRef<HTMLElement>()
     const [activeCategoryIndex, setActiveCategoryIndex] = useState(0)
-    // TODO (cb): const [intersectionTarget, setIntersectionTarget] = useState(null)
+    // TODO (cb):
+    // const [intersectionTarget, setIntersectionTarget] = useState(null)
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const intersectionEntriesRef = useRef<IntersectionObserverEntry[]>(categories.map(_ => ({ intersectionRatio: 0 } as IntersectionObserverEntry)))
+    const initialIntersectionEntries = categories.map(_ => ({ intersectionRatio: 0 } as IntersectionObserverEntry))
+    const intersectionEntriesRef = useRef<IntersectionObserverEntry[]>(initialIntersectionEntries)
     const handleCategoryIntersectionChangedFn = useHandleCategoryIntersectionChanged(intersectionEntriesRef.current, setActiveCategoryIndex)
-
     useEffect(() => { console.log(`%cactive category index: ${activeCategoryIndex}`, baseStyles) }, [activeCategoryIndex])
 
     return (
