@@ -10,10 +10,11 @@ export const useIntersectionObserver = (
     useEffect(() => {
         const node = ref.current;
         const observer = new IntersectionObserver(callback, options)
-        if (node) observer.observe(node)
+        if (node) observer.observe(node)        
 
         return (): void => {
-            if (node) observer.unobserve(node)
+            console.log('###########', 'unobserve', node)
+            if (node) observer.disconnect()
         }
     }, [ref, callback, options])
 }
