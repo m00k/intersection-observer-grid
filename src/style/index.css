@@ -1,9 +1,15 @@
+:root {
+	--cl-fg: #fff;
+	--cl-bg: #1B1B41;
+	--cl-accent: #ff69b4;
+}
+
 html, body {
 	height: 100%;
 	width: 100%;
 	padding: 0;
 	margin: 0;
-	background-color: #1B1B41;
+	background-color: var(--cl-bg);
 	font-family: 'Poppins', sans-serif;
 	font-weight: 400;
 	-webkit-font-smoothing: antialiased;

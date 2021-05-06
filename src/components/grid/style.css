@@ -1,5 +1,5 @@
 .category {
-    color: #ff69b4;
+    color: var(--cl-accent);
     font-size: large;
     text-transform: uppercase;
 }
@@ -10,7 +10,7 @@
 
 .header {
     background-color: #1B1B41;
-    color: #fff;
+    color: var(--cl-fg);
     display: block;
     font-weight: bold;
     font-size: x-large;
@@ -33,7 +33,7 @@
 }
 
 .header > a {
-    color: #fff;
+    color: var(--cl-fg);
     padding: .5rem;
     text-decoration: none;
     text-transform: uppercase;
@@ -46,7 +46,7 @@
 .itemDetail {
     background: rgba(255, 255, 255, .1);
     box-shadow: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
-    color: #fff;
+    color: var(--cl-fg);
     border-radius: .2rem;
     display: grid;
     font-size: larger;
