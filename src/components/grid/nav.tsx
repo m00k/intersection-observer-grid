@@ -22,6 +22,9 @@ const NavItem: FunctionComponent<NavItemProps> = ({
         const active = activeIndex === index
         if (active && el?.parentElement) {
             // TODO: only scroll into view when intersectionTarget !== self
+            // TODO: no support for behavior 'smooth' on safari
+            // -> investigate: calc scroll length, direction
+            // -> use requestAnimationFrame and scrollBy to scroll incrementally on each frame
             el.parentElement.scrollTo({ left: el.offsetLeft, behavior: 'smooth' })
         }
     }, [activeIndex, index])
