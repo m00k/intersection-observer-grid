@@ -32,7 +32,7 @@ const NavItem: FunctionComponent<NavItemProps> = ({
         <a
             ref={ref}
             href={`#${name}`} // TODO
-            style={{ color: activeIndex === index ? 'hotpink' : 'inherit' }}
+            style={{ color: activeIndex === index ? 'var(--cl-accent)' : 'inherit' }}
         >
             {name}
         </a>
