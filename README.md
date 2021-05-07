@@ -39,6 +39,7 @@
 - [iOS does not support smooth behavior](https://caniuse.com/?search=scrollintoview)
 - [Element.scrollIntoView](https://developer.mozilla.org/en-US/docs/Web/API/Element/scrollIntoView)
 - [Element.scrollIntoViewIfNeeded](https://developer.mozilla.org/en-US/docs/Web/API/Element/scrollIntoViewIfNeeded) - iOS
+- TODO: investigate how to update intersection entries ref in a scenario where list items are being added/removed dynamically
 
 ## CLI Commands
 *   `npm install`: Installs dependencies

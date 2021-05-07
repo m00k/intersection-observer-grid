@@ -20,7 +20,7 @@ type IntersectionTarget =
 const calcMaxIntersectionRatio = (intersectionEntries: IntersectionObserverEntry[]): number => {
     return intersectionEntries
         .reduce((acc, curr, i, arr) => {
-            const accRatio = arr[acc].intersectionRatio;
+            const accRatio = arr[acc]?.intersectionRatio || 0;
             const currRatio = curr.intersectionRatio;
             if (accRatio === currRatio) return acc < i ? acc : i
             return accRatio >= currRatio ? acc : i
@@ -30,18 +30,15 @@ const calcMaxIntersectionRatio = (intersectionEntries: IntersectionObserverEntry
 const useHandleCategoryIntersectionChanged = (
     handleActiveCategoryChanged: (index: number) => void
 ): CategoryIntersectionObserverCallback => {
-    const initialIntersectionEntries = categories.map(() => ({ intersectionRatio: 0 } as IntersectionObserverEntry))
-    const intersectionEntriesRef = useRef<IntersectionObserverEntry[]>(initialIntersectionEntries)
-    const intersectionEntries = intersectionEntriesRef.current
+    const categoryIntersectionsRef = useRef<IntersectionObserverEntry[]>([])
+    const categoryIntersections = categoryIntersectionsRef.current
     return (index: number, entry: IntersectionObserverEntry): void => {
-        intersectionEntries[index] = entry
-        handleActiveCategoryChanged(calcMaxIntersectionRatio(intersectionEntries))
+        categoryIntersections[index] = entry
+        handleActiveCategoryChanged(calcMaxIntersectionRatio(categoryIntersections))
     }    
 }
 
-// TODO (cb):
-// const [intersectionTarget, setIntersectionTarget] = useState(null)
-
+// TODO: const [intersectionTarget, setIntersectionTarget] = useState(null)
 const GridBlock: FunctionalComponent = () => {
     const containerRef = useRef<HTMLElement>()
     const [activeCategoryIndex, setActiveCategoryIndex] = useState(0)
