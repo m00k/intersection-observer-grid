@@ -18,6 +18,8 @@ export type IntersectionTarget =
     | 'nav'
     | 'category'
 
+type IndexChangedHandler = (index: number) => void;
+
 const calcIndexWithMaxIntersectionRatio = (intersectionEntries: IntersectionObserverEntry[]): number => {
     return intersectionEntries
         .reduce((acc, curr, i, arr) => {
@@ -29,7 +31,7 @@ const calcIndexWithMaxIntersectionRatio = (intersectionEntries: IntersectionObse
 }
 
 const useHandleCategoryIntersectionChanged = (
-    handleActiveCategoryChanged: (index: number) => void
+    handleActiveCategoryChanged: IndexChangedHandler
 ): CategoryIntersectionObserverCallback => {
     const categoryIntersectionsRef = useRef<IntersectionObserverEntry[]>([])
     const categoryIntersections = categoryIntersectionsRef.current
@@ -48,13 +50,15 @@ const GridBlock: FunctionalComponent = () => {
         setActiveIndex(index)
         setIntersectionTarget(target)
     }
-    const cb = (index: number): void => setIntersectionState(index, 'category')
+    const cb: IndexChangedHandler = index => setIntersectionState(index, 'category')
     const onCategoryIntersectionChanged = useHandleCategoryIntersectionChanged(cb)
+    const onNavigation: IndexChangedHandler = index => setIntersectionState(index, 'nav')
+
     useEffect(() => { console.log(`%cactive category index: ${activeIndex}`, baseStyles) }, [activeIndex])
 
     return (
         <Grid.Container ref={containerRef}>
-            <Grid.Nav {...{ categories, activeIndex, intersectionTarget }} />
+            <Grid.Nav {...{ categories, activeIndex, intersectionTarget, onNavigation }} />
             {categories.map((category, index) => (
                 <Grid.Category key={category.id} {...{ index, category, containerRef, onCategoryIntersectionChanged }}>
                     <Grid.ItemList>

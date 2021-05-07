@@ -10,6 +10,7 @@ interface NavItemProps {
     index: number;
     activeIndex: number;
     intersectionTarget: IntersectionTarget;
+    onNavigation: (index: number) => void;
 }
 
 const NavItem: FunctionComponent<NavItemProps> = ({
@@ -17,6 +18,7 @@ const NavItem: FunctionComponent<NavItemProps> = ({
     index,
     activeIndex,
     intersectionTarget,
+    onNavigation,
 }) => {
     const { name } = category;
     const ref = useRef<HTMLAnchorElement>()
@@ -39,6 +41,7 @@ const NavItem: FunctionComponent<NavItemProps> = ({
             ref={ref}
             href={`#${name}`} // TODO
             style={{ color: activeIndex === index ? 'var(--cl-accent)' : 'inherit' }}
+            onClick={(): void => onNavigation(index)}
         >
             {name}
         </a>
@@ -49,12 +52,14 @@ export interface NavProps {
     categories: Array<VM.Category>;
     activeIndex: number;
     intersectionTarget: IntersectionTarget;
+    onNavigation: (index: number) => void;
 }
 
 const Nav: FunctionComponent<NavProps> = ({
     categories,
     activeIndex,
     intersectionTarget,
+    onNavigation,
 }) => {
     return (
         <nav
@@ -62,7 +67,10 @@ const Nav: FunctionComponent<NavProps> = ({
         >
             {categories?.map((category, index) => {
                 return (
-                    <NavItem key={category.id} {...{ category, index, activeIndex, intersectionTarget }} />
+                    <NavItem
+                        key={category.id}
+                        {...{ category, index, activeIndex, intersectionTarget, onNavigation }}
+                    />
                 );
             })}
         </nav>
