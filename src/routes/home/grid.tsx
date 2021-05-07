@@ -60,7 +60,16 @@ const GridBlock: FunctionalComponent = () => {
         <Grid.Container ref={containerRef}>
             <Grid.Nav {...{ categories, activeIndex, intersectionTarget, onNavigation }} />
             {categories.map((category, index) => (
-                <Grid.Category key={category.id} {...{ index, category, containerRef, onCategoryIntersectionChanged }}>
+                <Grid.Category
+                    key={category.id}
+                    {...{
+                        index,
+                        category,
+                        containerRef,
+                        activeIndex,
+                        intersectionTarget,
+                        onCategoryIntersectionChanged,
+                    }}>
                     <Grid.ItemList>
                         {categoriesWithItems[category.id].map(item => (
                             <Grid.ItemDetail key={item.id} {...{ item }} />)

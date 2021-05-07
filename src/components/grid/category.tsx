@@ -1,7 +1,8 @@
 import { ComponentChildren, FunctionComponent, h, RefObject } from 'preact';
-import { useRef } from 'preact/hooks';
+import { useEffect, useRef } from 'preact/hooks';
 import * as VM from '../../api/model';
 import { useIntersectionObserver } from '../../components/grid/useIntersectionObserver';
+import { IntersectionTarget } from '../../routes/home/grid';
 import style from './style.css';
 
 export type CategoryIntersectionObserverCallback =
@@ -11,16 +12,20 @@ export interface CategoryProps {
     index: number;
     category: VM.Category;
     containerRef: RefObject<HTMLElement>;
-    children: ComponentChildren;
+    activeIndex: number;
+    intersectionTarget: IntersectionTarget;
     onCategoryIntersectionChanged: CategoryIntersectionObserverCallback;
+    children: ComponentChildren;
 }
 
 const Category: FunctionComponent<CategoryProps> = ({
     index,
     category,
     containerRef,
-    children,
+    activeIndex,
+    intersectionTarget,
     onCategoryIntersectionChanged,
+    children,
 }) => {
     const { name } = category
     const threshold = [0.1, 0.3, 0.5, 0.7, 0.9]
@@ -31,6 +36,12 @@ const Category: FunctionComponent<CategoryProps> = ({
         onCategoryIntersectionChanged(index, entry)
     }
     useIntersectionObserver(ref, handleIntersectionChanged, options)
+    useEffect(() => {
+        if (intersectionTarget === 'category') return
+        if (activeIndex !== index) return
+        // TODO: 'smooth' not supported on safari
+        ref.current.scrollIntoView({behavior: 'smooth'})
+    }, [activeIndex, index, intersectionTarget])
 
     return (
         <section ref={ref} class={style.category}>
