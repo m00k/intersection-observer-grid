@@ -1,7 +1,8 @@
 import { FunctionalComponent, h } from 'preact';
 import Grid from '../../components/grid';
 import { categories, categoriesWithItems } from '../../api';
-import { StateUpdater, useEffect, useRef, useState } from 'preact/hooks';
+import { useEffect, useRef, useState } from 'preact/hooks';
+import { CategoryIntersectionObserverCallback } from '../../components/grid/category';
 
 const baseStyles = [
     'color: #fff',
@@ -16,44 +17,42 @@ type IntersectionTarget =
     | 'nav'
     | 'category'
 
-const calcMaxIntersectionRatio = (intersectionEntries: IntersectionObserverEntry[], currMax: number): number => {
+const calcMaxIntersectionRatio = (intersectionEntries: IntersectionObserverEntry[]): number => {
     return intersectionEntries
         .reduce((acc, curr, i, arr) => {
             const accRatio = arr[acc].intersectionRatio;
             const currRatio = curr.intersectionRatio;
             if (accRatio === currRatio) return acc < i ? acc : i
             return accRatio >= currRatio ? acc : i
-        }, currMax)
+        }, 0)
 }
 
 const useHandleCategoryIntersectionChanged = (
-    intersectionEntries: IntersectionObserverEntry[],
-    stateUpdater: StateUpdater<number>,
-) => (index: number): IntersectionObserverCallback => {
-    const intersectionObserverCallback = (index: number, entries: IntersectionObserverEntry[]): void => {
-        const entry = entries?.[0]
+    handleActiveCategoryChanged: (index: number) => void
+): CategoryIntersectionObserverCallback => {
+    const initialIntersectionEntries = categories.map(() => ({ intersectionRatio: 0 } as IntersectionObserverEntry))
+    const intersectionEntriesRef = useRef<IntersectionObserverEntry[]>(initialIntersectionEntries)
+    const intersectionEntries = intersectionEntriesRef.current
+    return (index: number, entry: IntersectionObserverEntry): void => {
         intersectionEntries[index] = entry
-        stateUpdater(currentActiveCategoryIndex => calcMaxIntersectionRatio(intersectionEntries, currentActiveCategoryIndex))
+        handleActiveCategoryChanged(calcMaxIntersectionRatio(intersectionEntries))
     }    
-    return (entries: IntersectionObserverEntry[]): void => intersectionObserverCallback(index, entries)
 }
+
+// TODO (cb):
+// const [intersectionTarget, setIntersectionTarget] = useState(null)
 
 const GridBlock: FunctionalComponent = () => {
     const containerRef = useRef<HTMLElement>()
     const [activeCategoryIndex, setActiveCategoryIndex] = useState(0)
-    // TODO (cb):
-    // const [intersectionTarget, setIntersectionTarget] = useState(null)
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const initialIntersectionEntries = categories.map(_ => ({ intersectionRatio: 0 } as IntersectionObserverEntry))
-    const intersectionEntriesRef = useRef<IntersectionObserverEntry[]>(initialIntersectionEntries)
-    const handleCategoryIntersectionChangedFn = useHandleCategoryIntersectionChanged(intersectionEntriesRef.current, setActiveCategoryIndex)
+    const onCategoryIntersectionChanged: CategoryIntersectionObserverCallback = useHandleCategoryIntersectionChanged(setActiveCategoryIndex)
     useEffect(() => { console.log(`%cactive category index: ${activeCategoryIndex}`, baseStyles) }, [activeCategoryIndex])
 
     return (
         <Grid.Container ref={containerRef}>
             <Grid.Header {...{ categories }} />
             {categories.map((category, index) => (
-                <Grid.Category key={category.id} {...{ category, containerRef, onIntersectionChanged: handleCategoryIntersectionChangedFn(index) }}>
+                <Grid.Category key={category.id} {...{ index, category, containerRef, onCategoryIntersectionChanged }}>
                     <Grid.ItemList>
                         {categoriesWithItems[category.id].map(item => (
                             <Grid.ItemDetail key={item.id} {...{ item }} />)

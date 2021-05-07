@@ -13,7 +13,7 @@ export const useIntersectionObserver = (
         if (node) observer.observe(node)
 
         return (): void => {
-            if (node) observer.disconnect()
+            if (node) observer.unobserve(node)
         }
         // TODO (cb): options.root is changing on re-render, so is callback
         // eslint-disable-next-line react-hooks/exhaustive-deps
