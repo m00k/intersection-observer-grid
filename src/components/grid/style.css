@@ -8,7 +8,7 @@
 
 }
 
-.header {
+.nav {
     background-color: #1B1B41;
     color: var(--cl-fg);
     display: block;
@@ -21,25 +21,25 @@
     top: 0;
 }
 
-.header::-webkit-scrollbar {
+.nav::-webkit-scrollbar {
     display: none;
 }
 
 @media screen and (max-width: 1024px) {
-    .header {
+    .nav {
         font-weight: large;
         padding: 1rem;
     }
 }
 
-.header > a {
+.nav > a {
     color: var(--cl-fg);
     padding: .5rem;
     text-decoration: none;
     text-transform: uppercase;
 }
 
-.header > a:visited {
+.nav > a:visited {
     color: unset;
 }
 

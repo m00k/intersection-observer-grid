@@ -41,13 +41,13 @@ const useHandleCategoryIntersectionChanged = (
 // TODO: const [intersectionTarget, setIntersectionTarget] = useState(null)
 const GridBlock: FunctionalComponent = () => {
     const containerRef = useRef<HTMLElement>()
-    const [activeCategoryIndex, setActiveCategoryIndex] = useState(0)
-    const onCategoryIntersectionChanged: CategoryIntersectionObserverCallback = useHandleCategoryIntersectionChanged(setActiveCategoryIndex)
-    useEffect(() => { console.log(`%cactive category index: ${activeCategoryIndex}`, baseStyles) }, [activeCategoryIndex])
+    const [activeIndex, setActiveIndex] = useState(0)
+    const onCategoryIntersectionChanged: CategoryIntersectionObserverCallback = useHandleCategoryIntersectionChanged(setActiveIndex)
+    useEffect(() => { console.log(`%cactive category index: ${activeIndex}`, baseStyles) }, [activeIndex])
 
     return (
         <Grid.Container ref={containerRef}>
-            <Grid.Header {...{ categories }} />
+            <Grid.Nav {...{ categories, activeIndex }} />
             {categories.map((category, index) => (
                 <Grid.Category key={category.id} {...{ index, category, containerRef, onCategoryIntersectionChanged }}>
                     <Grid.ItemList>
