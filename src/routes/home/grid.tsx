@@ -37,8 +37,11 @@ export const useIntersectionObserver = (
     }, [callback, containerRef])
 }
 
+type NavFC = HTMLElement & { scrollActiveNavItem: () => void }
+
 const GridBlock: FunctionalComponent = () => {
     const containerRef = useRef<HTMLElement>()
+    const navRef = useRef<NavFC>()
     const [activeIndex, setActiveIndex] = useState(0)
     const observeCategoriesRef = useRef<boolean>(true)
     const categoryIntersectionsRef = useRef<IntersectionObserverEntry[]>()
@@ -49,7 +52,10 @@ const GridBlock: FunctionalComponent = () => {
             updateIndex > -1 && (categoryIntersectionsRef.current[updateIndex] = e)
         })
         const nextActiveIndex = calcIndexWithMaxIntersectionRatio(categoryIntersectionsRef.current)
-        if (observeCategoriesRef.current) setActiveIndex(nextActiveIndex)
+        if (observeCategoriesRef.current) {
+            setActiveIndex(nextActiveIndex)
+            navRef.current.scrollActiveNavItem()
+        }
     }, [])
     const observer = useIntersectionObserver(
         handleCategoryIntersection,
@@ -66,6 +72,7 @@ const GridBlock: FunctionalComponent = () => {
         setTimeout(() => observeCategoriesRef.current = true, 1000) // TODO: single source of truth, align with scroll duration
     }
 
+    // TODO: remove
     useEffect(() => { console.log(`%cactive category index: ${activeIndex}`, baseStyles) }, [activeIndex])
     useEffect(() => { console.log(`observer: ${observer}`, baseStyles) }, [observer])
     useEffect(() => { console.log(`containerRef: ${containerRef}`, baseStyles) }, [containerRef])
@@ -74,7 +81,7 @@ const GridBlock: FunctionalComponent = () => {
 
     return (
         <Fragment>
-            <Grid.Nav {...{ categories, activeIndex, onNavigation }} />
+            <Grid.Nav ref={navRef} {...{ categories, activeIndex, onNavigation }} />
             <Grid.Container ref={containerRef}>
                 {categories.map(category => (
                     <Grid.Category

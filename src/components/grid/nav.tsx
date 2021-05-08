@@ -1,5 +1,6 @@
 import { FunctionComponent, h } from 'preact';
-import { useEffect, useRef } from 'preact/hooks';
+import { forwardRef } from 'preact/compat';
+import { useImperativeHandle, useRef } from 'preact/hooks';
 import * as VM from '../../api/model';
 import style from './style.css';
 
@@ -14,17 +15,17 @@ const Nav: FunctionComponent<NavProps> = ({
     categories,
     activeIndex,
     onNavigation,
-}) => {
-    const navRef = useRef<HTMLElement>();
+}, ref) => {
+    const navRef = useRef<HTMLElement>()
     const activeItemRef = useRef<HTMLAnchorElement>();
-    // TODO: move to container?
-    useEffect(() => {
-        const el = activeItemRef.current
-        // TODO: no support for behavior 'smooth' on safari
-        // -> investigate: calc scroll length, direction
-        // -> use requestAnimationFrame and scrollBy to scroll incrementally on each frame
-        navRef.current.scrollTo({ left: el.offsetLeft, behavior: 'smooth' })
-    }, [activeIndex])
+    useImperativeHandle(ref, () => ({
+        scrollActiveNavItem: (): void => {
+            // TODO: safari does not support 'smooth'
+            // -> calc scroll length and use requestAnimationFrame
+            const left = activeItemRef.current.offsetLeft
+            navRef.current.scrollTo({ left, behavior: 'smooth' })
+        }
+    }))
     return (
         <nav
             ref={navRef}
@@ -33,7 +34,7 @@ const Nav: FunctionComponent<NavProps> = ({
             {categories?.map(({ name, id }, index) => {
                 return (
                     <a
-                        ref={index === activeIndex ? activeItemRef : null}
+                        ref={index === activeIndex ? activeItemRef : undefined}
                         key={id}
                         href={`#${name}`} // TODO
                         style={{ color: activeIndex === index ? 'var(--cl-accent)' : 'inherit' }}
@@ -47,4 +48,4 @@ const Nav: FunctionComponent<NavProps> = ({
     )
 }
 
-export default Nav
+export default forwardRef(Nav)
