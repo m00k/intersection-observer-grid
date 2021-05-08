@@ -40,6 +40,7 @@ export const useIntersectionObserver = (
 const GridBlock: FunctionalComponent = () => {
     const containerRef = useRef<HTMLElement>()
     const [activeIndex, setActiveIndex] = useState(0)
+    const observeCategoriesRef = useRef<boolean>(true)
     const categoryIntersectionsRef = useRef<IntersectionObserverEntry[]>()
     const handleCategoryIntersection: IntersectionObserverCallback = useCallback((entries: IntersectionObserverEntry[]) => {
         categoryIntersectionsRef.current = categoryIntersectionsRef.current || [...entries]
@@ -48,7 +49,7 @@ const GridBlock: FunctionalComponent = () => {
             updateIndex > -1 && (categoryIntersectionsRef.current[updateIndex] = e)
         })
         const nextActiveIndex = calcIndexWithMaxIntersectionRatio(categoryIntersectionsRef.current)
-        setActiveIndex(nextActiveIndex)
+        if (observeCategoriesRef.current) setActiveIndex(nextActiveIndex)
     }, [])
     const observer = useIntersectionObserver(
         handleCategoryIntersection,
@@ -56,15 +57,13 @@ const GridBlock: FunctionalComponent = () => {
         { threshold },
     );
     const categoryRefCallback: RefCallback<HTMLDivElement> = useCallback(r => (r && observer.observe(r)), [observer])
-    const observeCategoryIntersections = useCallback(() => categoryIntersectionsRef.current.forEach(e => observer.observe(e.target)), [observer])
-    const unobserveCategoryIntersections = useCallback(() => categoryIntersectionsRef.current.forEach(e => observer.unobserve(e.target)), [observer]) // TODO: observer.disconnect()?
 
     const onNavigation: IndexChangedHandler = index => {
         setActiveIndex(index)
-        unobserveCategoryIntersections()
+        observeCategoriesRef.current = false
         const activeCategoryEl = categoryIntersectionsRef.current[index].target
         activeCategoryEl.scrollIntoView({ behavior: 'smooth' })
-        setTimeout(() => observeCategoryIntersections())
+        setTimeout(() => observeCategoriesRef.current = true, 1000) // TODO: single source of truth, align with scroll duration
     }
 
     useEffect(() => { console.log(`%cactive category index: ${activeIndex}`, baseStyles) }, [activeIndex])
