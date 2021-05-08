@@ -10,13 +10,6 @@ const baseStyles = [
     'border-radius: 2px'
 ].join(';');
 
-// TODO: move type
-export type IntersectionTarget =
-    | 'page'
-    | 'container'
-    | 'nav'
-    | 'category'
-
 type IndexChangedHandler = (index: number) => void;
 
 const calcIndexWithMaxIntersectionRatio = (intersectionEntries: IntersectionObserverEntry[]): number => {
@@ -37,7 +30,6 @@ export const useIntersectionObserver = (
     pOptions?: Omit<IntersectionObserverInit, 'root'>,
 ): IntersectionObserver => {
     return useMemo(() => {
-        console.log('############## observer init')
         const options = { ...pOptions, root: containerRef?.current }
         return new IntersectionObserver(callback, options)
     // NOTE: adding pOptions will re-render
@@ -64,31 +56,16 @@ const GridBlock: FunctionalComponent = () => {
         { threshold },
     );
     const categoryRefCallback: RefCallback<HTMLDivElement> = useCallback(r => (r && observer.observe(r)), [observer])
+    const observeCategoryIntersections = useCallback(() => categoryIntersectionsRef.current.forEach(e => observer.observe(e.target)), [observer])
+    const unobserveCategoryIntersections = useCallback(() => categoryIntersectionsRef.current.forEach(e => observer.unobserve(e.target)), [observer]) // TODO: observer.disconnect()?
 
-    // TODO
-    // disconnect while scrolling into view -> observer.disconnect() vs categoryIntersectionsRef.current.forEach(e => observer.unobserve(e.target))
-    // reconnect after nav scrolling is done -> categoryIntersectionsRef.current.forEach(e => observer.observe(e.target))
-
-    // const [intersectionTarget, setIntersectionTarget] = useState<IntersectionTarget>('page') // TODO: 'category' ?
-
-    // const setIntersectionState = (index: number, target: IntersectionTarget): void => {
-    //     if (target === 'nav') {
-    //         containerRef.current.children[index].scrollIntoView({behavior: 'smooth'})
-    //         setIntersectionTarget(target)
-    //         setActiveIndex(index)
-    //         // TODO: back to curr after timeout
-    //     }
-    //     if (target === 'category' && target === intersectionTarget) {
-    //         setIntersectionTarget(target)
-    //         setActiveIndex(index)
-    //     }
-
-    // }
-    // const cb: IndexChangedHandler = index => {
-    //     setIntersectionState(index, 'category')
-    // }
-    // const onCategoryIntersectionChanged = useHandleCategoryIntersectionChanged(cb)
-    // const onNavigation: IndexChangedHandler = index => setIntersectionState(index, 'nav')
+    const onNavigation: IndexChangedHandler = index => {
+        setActiveIndex(index)
+        unobserveCategoryIntersections()
+        const activeCategoryEl = categoryIntersectionsRef.current[index].target
+        activeCategoryEl.scrollIntoView({ behavior: 'smooth' })
+        setTimeout(() => observeCategoryIntersections())
+    }
 
     useEffect(() => { console.log(`%cactive category index: ${activeIndex}`, baseStyles) }, [activeIndex])
     useEffect(() => { console.log(`observer: ${observer}`, baseStyles) }, [observer])
@@ -98,7 +75,7 @@ const GridBlock: FunctionalComponent = () => {
 
     return (
         <Fragment>
-            <Grid.Nav {...{ categories, activeIndex, intersectionTarget: null, onNavigation: Function.prototype }} />
+            <Grid.Nav {...{ categories, activeIndex, onNavigation }} />
             <Grid.Container ref={containerRef}>
                 {categories.map(category => (
                     <Grid.Category
