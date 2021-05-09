@@ -12,10 +12,14 @@ const Category: FunctionComponent<CategoryProps> = ({
     category,
     children,
 }, ref) => {
-    const { name, id } = category
+    const { name } = category
 
     return (
-        <section ref={ref} class={style.category} data-id={id}>
+        <section
+            ref={ref}
+            class={style.category}
+            id={name}
+        >
             <h3>{name}</h3>
             {children}
         </section>

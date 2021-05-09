@@ -36,10 +36,11 @@
         - if (target !== self) scrollIntoView()
 
 ## Notes
-- [iOS does not support scrollIntoView with smooth behavior](https://caniuse.com/?search=scrollintoview)
+- [Safari does not support scrollIntoView with smooth behavior](https://caniuse.com/?search=scrollintoview)
+- [Safari does not support scrollTo with smooth behavior](https://caniuse.com/mdn-api_scrolltooptions_behavior)
+- [Safari does not support css scroll-behavior smooth](https://caniuse.com/css-scroll-behavior)
 - [Element.scrollIntoView](https://developer.mozilla.org/en-US/docs/Web/API/Element/scrollIntoView)
-- [Element.scrollIntoViewIfNeeded](https://developer.mozilla.org/en-US/docs/Web/API/Element/scrollIntoViewIfNeeded) - iOS
-- [iOS does not support scrollTo with smooth behavior](https://caniuse.com/mdn-api_scrolltooptions_behavior)
+- [Element.scrollIntoViewIfNeeded (Safari only)](https://developer.mozilla.org/en-US/docs/Web/API/Element/scrollIntoViewIfNeeded)
 - TODO: investigate how to update intersection entries ref in a scenario where list items are being added/removed dynamically
 
 ## CLI Commands

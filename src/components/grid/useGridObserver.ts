@@ -29,7 +29,7 @@ const calcIndexWithMaxIntersectionRatio = (intersectionEntries: IntersectionObse
 }
 
 type KeyAccessor<T> = (entry: IntersectionObserverEntry) => T
-const keyAccessor: KeyAccessor<string | undefined> = e => (e.target as HTMLElement)?.dataset?.id
+const keyAccessor: KeyAccessor<string | undefined> = e => (e.target as HTMLElement)?.id
 
 export const useGridObserver = (
     containerRef: RefObject<HTMLElement>,
@@ -66,9 +66,10 @@ export const useGridObserver = (
     const handleNavigation: IndexChangedHandler = index => {
         setActiveIndex(index)
         observeBodyRef.current = false
-        const activeBodySectionEl = bodyIntersectionsRef.current[index].target
-        activeBodySectionEl.scrollIntoView({ behavior: 'smooth' })
-        setTimeout(() => observeBodyRef.current = true, 1000) // TODO: single source of truth, align with scroll duration
+        // NOTE: html { scroll-behavior: smooth }
+        // const activeBodySectionEl = bodyIntersectionsRef.current[index].target
+        // activeBodySectionEl.scrollIntoView({ behavior: 'smooth' })
+        setTimeout(() => observeBodyRef.current = true, 1000)
     }
 
     return [activeIndex, bodySectionRefCallback, handleNavigation]
