@@ -42,6 +42,7 @@ export const useGridObserver = (
     const [activeIndex, setActiveIndex] = useState(0)
     const observeBodyRef = useRef<boolean>(true)
     const bodyIntersectionsRef = useRef<IntersectionObserverEntry[]>()
+    const navScrollDebounceRef = useRef<number>()
 
     const handleBodyIntersection: IntersectionObserverCallback = useCallback((entries: IntersectionObserverEntry[]) => {
         bodyIntersectionsRef.current = bodyIntersectionsRef.current
@@ -50,7 +51,8 @@ export const useGridObserver = (
         const nextActiveIndex = calcIndexWithMaxIntersectionRatio(bodyIntersectionsRef.current)
         if (observeBodyRef.current) {
             setActiveIndex(nextActiveIndex)
-            headerRef?.current?.scrollActiveNavItem()
+            window.clearTimeout(navScrollDebounceRef.current)
+            navScrollDebounceRef.current = window.setTimeout(() => headerRef?.current?.scrollActiveNavItem(), 100)
         }
     }, []) // TODO
 
