@@ -22,8 +22,17 @@ const Nav: FunctionComponent<NavProps> = ({
         scrollActiveNavItem: (): void => {
             // TODO: safari does not support 'smooth'
             // -> calc scroll length and use requestAnimationFrame
-            const left = activeItemRef.current.offsetLeft
-            navRef.current.scrollTo({ left, behavior: 'smooth' })
+            // const left = activeItemRef.current.offsetLeft
+            // navRef.current.scrollTo({ left, behavior: 'smooth' })
+
+            // TODO:
+            // - only one ref is needed!
+            // - forward this ref and let parent control the scrolling?
+            const el = activeItemRef.current
+            const left = el.offsetLeft
+            // TODO: https://github.com/iamdustan/smoothscroll/blob/master/src/smoothscroll.js#L158
+            const parentEl = activeItemRef.current.parentElement
+            parentEl?.scrollTo({ left, behavior: 'smooth' })
         }
     }))
     return (
