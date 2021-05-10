@@ -1,8 +1,18 @@
+:root {
+    --nav-height: 100px;
+}
+
 .category {
     color: var(--cl-accent);
     font-size: large;
     text-transform: uppercase;
 }
+
+.category > h3 {
+    padding-top: var(--nav-height);
+    margin-top: calc(-1 * var(--nav-height));
+}
+
 
 .container {
 
@@ -14,11 +24,13 @@
     display: block;
     font-weight: bold;
     font-size: x-large;
+    height: var(--nav-height);
     overflow-x: auto;
     padding: 2rem;
     position: sticky;
     scrollbar-width: none;
     top: 0;
+    z-index: 1;
 }
 
 .nav::-webkit-scrollbar {
