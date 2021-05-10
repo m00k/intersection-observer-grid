@@ -1,5 +1,5 @@
 import { RefCallback, RefObject } from 'preact';
-import { useCallback, useMemo, useRef, useState } from 'preact/hooks';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'preact/hooks';
 
 export type NavFC = HTMLElement & { scrollActiveNavItem: () => void }
 type IndexChangedHandler = (index: number) => void;
@@ -18,18 +18,30 @@ const useIntersectionObserver = (
     }, [callback, containerRef])
 }
 
-const calcIndexWithMaxIntersectionRatio = (intersectionEntries: IntersectionObserverEntry[]): number => {
-    return intersectionEntries
-        .reduce((acc, curr, i, arr) => {
-            const accRatio = arr[acc]?.intersectionRatio || 0;
-            const currRatio = curr.intersectionRatio;
-            if (accRatio === currRatio) return acc < i ? acc : i
-            return accRatio >= currRatio ? acc : i
-        }, 0)
+const calcIndexWithMaxIntersectionRatio = (intersectionEntries: Map<number, IntersectionObserverEntry>): number => {
+    let resultValue: IntersectionObserverEntry | undefined;
+    let resultKey = 0; // TODO: proper initialization
+    intersectionEntries.forEach((entry, key) => {
+        if (!resultValue) {
+            resultValue = resultValue || entry
+            resultKey = resultKey || key
+        }
+        if (entry.intersectionRatio === resultValue.intersectionRatio) {
+            // highlight first item with ratio 1 in case there's multiple
+            if (key < resultKey) {
+                resultValue = entry
+                resultKey = key
+            }
+        } else if (entry.intersectionRatio > resultValue.intersectionRatio) {
+            resultValue = entry
+            resultKey = key
+        }
+    })
+    return resultKey as number;
 }
 
 type KeyAccessor<T> = (entry: IntersectionObserverEntry) => T
-const keyAccessor: KeyAccessor<string | undefined> = e => (e.target as HTMLElement)?.dataset?.id
+const keyAccessor: KeyAccessor<number> = e => parseInt((e.target as HTMLElement)?.dataset?.id || '0', 10)
 
 export const useGridObserver = (
     containerRef: RefObject<HTMLElement>,
@@ -41,13 +53,11 @@ export const useGridObserver = (
 ] => {
     const [activeIndex, setActiveIndex] = useState(0)
     const observeBodyRef = useRef<boolean>(true)
-    const bodyIntersectionsRef = useRef<IntersectionObserverEntry[]>()
+    const bodyIntersectionsRef = useRef<Map<number, IntersectionObserverEntry>>(new Map())
     const navScrollDebounceRef = useRef<number>()
 
     const handleBodyIntersection: IntersectionObserverCallback = useCallback((entries: IntersectionObserverEntry[]) => {
-        bodyIntersectionsRef.current = bodyIntersectionsRef.current
-            ? bodyIntersectionsRef.current.map(ce => entries.find(e => keyAccessor(e) === keyAccessor(ce)) || ce)
-            : [...entries]
+        entries.forEach(e => bodyIntersectionsRef.current.set(keyAccessor(e), e))
         const nextActiveIndex = calcIndexWithMaxIntersectionRatio(bodyIntersectionsRef.current)
         if (observeBodyRef.current) {
             setActiveIndex(nextActiveIndex)
@@ -66,10 +76,12 @@ export const useGridObserver = (
     const handleNavigation: IndexChangedHandler = index => {
         setActiveIndex(index)
         observeBodyRef.current = false
-        const activeBodySectionEl = bodyIntersectionsRef.current[index].target
-        activeBodySectionEl.scrollIntoView({ behavior: 'smooth' })
+        const activeBodySectionEl = bodyIntersectionsRef.current.get(index)?.target
+        activeBodySectionEl?.scrollIntoView({ behavior: 'smooth' })
         setTimeout(() => observeBodyRef.current = true, 1000) // TODO: single source of truth, align with scroll duration
     }
+
+    useEffect(() => console.log('########## active index', activeIndex), [activeIndex])
 
     return [activeIndex, bodySectionRefCallback, handleNavigation]
 }
