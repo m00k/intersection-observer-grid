@@ -1,6 +1,9 @@
 import { RefCallback, RefObject } from 'preact';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'preact/hooks';
 
+// https://github.com/iamdustan/smoothscroll/blob/master/src/smoothscroll.js#L19
+const SCROLL_TIME = 600; 
+
 export type NavFC = HTMLElement & { scrollActiveNavItem: () => void }
 type IndexChangedHandler = (index: number) => void;
 
@@ -78,7 +81,7 @@ export const useGridObserver = (
         observeBodyRef.current = false
         const activeBodySectionEl = bodyIntersectionsRef.current.get(index)?.target
         activeBodySectionEl?.scrollIntoView({ behavior: 'smooth' })
-        setTimeout(() => observeBodyRef.current = true, 1000) // TODO: single source of truth, align with scroll duration
+        setTimeout(() => observeBodyRef.current = true, SCROLL_TIME)
     }
 
     useEffect(() => console.log('########## active index', activeIndex), [activeIndex])
