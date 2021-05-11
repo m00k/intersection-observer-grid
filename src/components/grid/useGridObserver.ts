@@ -4,7 +4,6 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'preact/hooks'
 // https://github.com/iamdustan/smoothscroll/blob/master/src/smoothscroll.js#L19
 const SCROLL_TIME = 600; 
 
-export type NavFC = HTMLElement & { scrollActiveNavItem: () => void }
 type IndexChangedHandler = (index: number) => void;
 
 const threshold = [0, 0.2, 0.4, 0.6, 0.8, 1];
@@ -47,8 +46,8 @@ type KeyAccessor<T> = (entry: IntersectionObserverEntry) => T
 const keyAccessor: KeyAccessor<number> = e => parseInt((e.target as HTMLElement)?.dataset?.id || '0', 10)
 
 export const useGridObserver = (
-    containerRef: RefObject<HTMLElement>,
-    headerRef: RefObject<NavFC>,
+    scrollNavIntoView: (index: number) => void,
+    containerRef?: RefObject<HTMLElement>,
 ): [
     number,
     RefCallback<HTMLElement>,
@@ -65,7 +64,7 @@ export const useGridObserver = (
         if (observeBodyRef.current) {
             setActiveIndex(nextActiveIndex)
             window.clearTimeout(navScrollDebounceRef.current)
-            navScrollDebounceRef.current = window.setTimeout(() => headerRef?.current?.scrollActiveNavItem(), 100)
+            navScrollDebounceRef.current = window.setTimeout(() => scrollNavIntoView(nextActiveIndex), 100)
         }
     }, []) // TODO
 

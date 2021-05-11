@@ -2,13 +2,13 @@ import { Fragment, FunctionalComponent, h } from 'preact';
 import { useRef } from 'preact/hooks';
 import { categories, categoriesWithItems } from '../../api';
 import Grid from '../../components/grid';
-import { useGridObserver, NavFC } from '../../components/grid/useGridObserver';
-
+import { scrollChildIntoViewFn } from '../../components/grid/nav';
+import { useGridObserver } from '../../components/grid/useGridObserver';
 
 const GridBlock: FunctionalComponent = () => {
     const containerRef = useRef<HTMLElement>()
-    const navRef = useRef<NavFC>()
-    const [activeIndex, categoryRefCallback, onNavigation] = useGridObserver(containerRef, navRef)
+    const navRef = useRef<HTMLElement>()
+    const [activeIndex, categoryRefCallback, onNavigation] = useGridObserver(scrollChildIntoViewFn(navRef), containerRef)
 
     return (
         <Fragment>

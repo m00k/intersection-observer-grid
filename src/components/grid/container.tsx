@@ -6,7 +6,7 @@ export interface ContainerProps {
     children: ComponentChildren[];
 }
 
-const Container: FunctionComponent<ContainerProps> = forwardRef((
+const Container: FunctionComponent<ContainerProps> = (
     props,
     ref: RefObject<HTMLElement>,
 ) => {
@@ -16,6 +16,6 @@ const Container: FunctionComponent<ContainerProps> = forwardRef((
             {children}
         </article>
     );
-})
+}
 
-export default Container
+export default forwardRef(Container)

@@ -1,9 +1,16 @@
-import { FunctionComponent, h } from 'preact';
+import { FunctionComponent, h, RefObject } from 'preact';
 import { forwardRef } from 'preact/compat';
-import { useImperativeHandle, useRef } from 'preact/hooks';
 import * as VM from '../../api/model';
 import style from './style.css';
 
+
+export const scrollChildIntoView = (parentEl: HTMLElement | null, childIndex: number ): void => {
+    const el = parentEl?.children?.[childIndex] as HTMLElement | null
+    const left = el?.offsetLeft
+    parentEl?.scrollTo({ left, behavior: 'smooth' })
+}
+
+export const scrollChildIntoViewFn = (parentRef: RefObject<HTMLElement>) => (index: number): void => scrollChildIntoView(parentRef.current, index)
 
 export interface NavProps {
     categories: Array<VM.Category>;
@@ -16,34 +23,14 @@ const Nav: FunctionComponent<NavProps> = ({
     activeIndex,
     onNavigation,
 }, ref) => {
-    const navRef = useRef<HTMLElement>()
-    const activeItemRef = useRef<HTMLAnchorElement>();
-    useImperativeHandle(ref, () => ({
-        scrollActiveNavItem: (): void => {
-            // TODO: safari does not support 'smooth'
-            // -> calc scroll length and use requestAnimationFrame
-            // const left = activeItemRef.current.offsetLeft
-            // navRef.current.scrollTo({ left, behavior: 'smooth' })
-
-            // TODO:
-            // - only one ref is needed!
-            // - forward this ref and let parent control the scrolling?
-            const el = activeItemRef.current
-            const left = el.offsetLeft
-            // TODO: https://github.com/iamdustan/smoothscroll/blob/master/src/smoothscroll.js#L158
-            const parentEl = activeItemRef.current.parentElement
-            parentEl?.scrollTo({ left, behavior: 'smooth' })
-        }
-    }))
     return (
         <nav
-            ref={navRef}
+            ref={ref}
             class={style.nav}
         >
             {categories?.map(({ name, id }, index) => {
                 return (
                     <a
-                        ref={index === activeIndex ? activeItemRef : undefined}
                         key={id}
                         href={`#${name}`} // TODO
                         style={{ color: activeIndex === index ? 'var(--cl-accent)' : 'inherit' }}
