@@ -5,10 +5,18 @@ import Grid from '../../components/grid';
 import { scrollChildIntoViewFn } from '../../components/grid/nav';
 import { useGridObserver } from '../../components/grid/useGridObserver';
 
+// TODO: move
+const getInitialIndex = (): number => {
+    const categoryName = window.location.hash || ''
+    const idIndex = categoryName.indexOf('_')
+    return idIndex > -1 ? +categoryName.substring(idIndex + 1) : 0
+}
+
 const GridBlock: FunctionalComponent = () => {
     const containerRef = useRef<HTMLElement>()
     const navRef = useRef<HTMLElement>()
-    const [activeIndex, categoryRefCallback, onNavigation] = useGridObserver(scrollChildIntoViewFn(navRef), containerRef)
+    const initialIndex = getInitialIndex()
+    const [activeIndex, categoryRefCallback, onNavigation] = useGridObserver(initialIndex, scrollChildIntoViewFn(navRef), containerRef)
 
     return (
         <Fragment>

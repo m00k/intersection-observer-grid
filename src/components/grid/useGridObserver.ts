@@ -2,11 +2,11 @@ import { RefCallback, RefObject } from 'preact';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'preact/hooks';
 
 // https://github.com/iamdustan/smoothscroll/blob/master/src/smoothscroll.js#L19
-const SCROLL_TIME = 600; 
+const SCROLL_TIME = 468 * 2 // add some buffer
 
 type IndexChangedHandler = (index: number) => void;
 
-const threshold = [0, 0.2, 0.4, 0.6, 0.8, 1];
+const threshold = [0, 0.2, 0.4, 0.6, 0.8, 1]
 const useIntersectionObserver = (
     callback: IntersectionObserverCallback,
     containerRef?: RefObject<Element>,
@@ -43,9 +43,10 @@ const calcIndexWithMaxIntersectionRatio = (intersectionEntries: Map<number, Inte
 }
 
 type KeyAccessor<T> = (entry: IntersectionObserverEntry) => T
-const keyAccessor: KeyAccessor<number> = e => parseInt((e.target as HTMLElement)?.dataset?.id || '0', 10)
+const keyAccessor: KeyAccessor<number> = e => +((e.target as HTMLElement)?.dataset?.id || 0)
 
 export const useGridObserver = (
+    initialIndex: number,
     scrollNavIntoView: (index: number) => void,
     containerRef?: RefObject<HTMLElement>,
 ): [
@@ -53,8 +54,8 @@ export const useGridObserver = (
     RefCallback<HTMLElement>,
     IndexChangedHandler,
 ] => {
-    const [activeIndex, setActiveIndex] = useState(0)
-    const observeBodyRef = useRef<boolean>(true)
+    const [activeIndex, setActiveIndex] = useState(initialIndex)
+    const observeBodyRef = useRef<boolean>(false)
     const bodyIntersectionsRef = useRef<Map<number, IntersectionObserverEntry>>(new Map())
     const navScrollDebounceRef = useRef<number>()
 
@@ -66,7 +67,8 @@ export const useGridObserver = (
             window.clearTimeout(navScrollDebounceRef.current)
             navScrollDebounceRef.current = window.setTimeout(() => scrollNavIntoView(nextActiveIndex), 100)
         }
-    }, []) // TODO
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [])
 
     const observer = useIntersectionObserver(
         handleBodyIntersection,
@@ -82,6 +84,15 @@ export const useGridObserver = (
         activeBodySectionEl?.scrollIntoView({ behavior: 'smooth' })
         setTimeout(() => observeBodyRef.current = true, SCROLL_TIME)
     }
+
+    useEffect(() => {
+        setActiveIndex(initialIndex)
+        const activeBodySectionEl = bodyIntersectionsRef.current.get(initialIndex)?.target
+        activeBodySectionEl?.scrollIntoView()
+        scrollNavIntoView(initialIndex)
+        setTimeout(() => observeBodyRef.current = true, SCROLL_TIME)
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [])
 
     useEffect(() => console.log('########## active index', activeIndex), [activeIndex])
 
