@@ -1,4 +1,4 @@
-import { FunctionComponent, h, Fragment } from 'preact';
+import { Fragment, FunctionComponent, h } from 'preact';
 
 // TODO: HOC to provide categories data
 // eslint-disable-next-line @typescript-eslint/no-empty-interface

@@ -1,6 +1,6 @@
 import { FunctionComponent, h } from 'preact';
-import * as VM from '../../api/model';
-import style from './style.css';
+import * as VM from '../../../api/model';
+import style from '../styles/index.css';
 
 export interface ItemDetailProps {
     item: VM.Item;

@@ -1,7 +1,7 @@
 import { h } from 'preact';
 // See: https://github.com/preactjs/enzyme-adapter-preact-pure
 import { shallow } from 'enzyme';
-import App from '../src/components/app';
+import App from '../src/app/app';
 
 describe('Initial Test of the App', () => {
     test('App renders', () => {

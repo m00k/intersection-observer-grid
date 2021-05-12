@@ -1,8 +1,8 @@
 import Category from './category';
 import Container from './container';
-import Nav from './nav';
 import ItemDetail from './itemDetail';
 import ItemList from './itemList';
+import Nav from './nav';
 import WithData from './withData';
 
 const Grid = {
