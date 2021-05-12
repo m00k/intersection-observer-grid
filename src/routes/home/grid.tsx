@@ -2,21 +2,15 @@ import { Fragment, FunctionalComponent, h } from 'preact';
 import { useRef } from 'preact/hooks';
 import { categories, categoriesWithItems } from '../../api';
 import Grid from '../../components/grid';
-import { scrollChildIntoViewFn } from '../../components/grid/nav';
+import { scrollNavItemIntoViewFn } from '../../components/grid/nav.service';
 import { useGridObserver } from '../../components/grid/useGridObserver';
-
-// TODO: move
-const getInitialIndex = (): number => {
-    const categoryName = window.location.hash || ''
-    const idIndex = categoryName.indexOf('_')
-    return idIndex > -1 ? +categoryName.substring(idIndex + 1) : 0
-}
+import locationHashToIndex from './locationHashToIndex';
 
 const GridBlock: FunctionalComponent = () => {
     const containerRef = useRef<HTMLElement>()
     const navRef = useRef<HTMLElement>()
-    const initialIndex = getInitialIndex()
-    const [activeIndex, categoryRefCallback, onNavigation] = useGridObserver(initialIndex, scrollChildIntoViewFn(navRef), containerRef)
+    const initialIndex = locationHashToIndex()
+    const [activeIndex, categoryRefCallback, onNavigation] = useGridObserver(initialIndex, scrollNavItemIntoViewFn(navRef), containerRef)
 
     return (
         <Fragment>

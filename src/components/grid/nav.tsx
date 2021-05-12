@@ -1,16 +1,7 @@
-import { FunctionComponent, h, RefObject } from 'preact';
+import { FunctionComponent, h } from 'preact';
 import { forwardRef } from 'preact/compat';
 import * as VM from '../../api/model';
 import style from './style.css';
-
-
-export const scrollChildIntoView = (parentEl: HTMLElement | null, childIndex: number ): void => {
-    const el = parentEl?.children?.[childIndex] as HTMLElement | null
-    const left = el?.offsetLeft
-    parentEl?.scrollTo({ left, behavior: 'smooth' })
-}
-
-export const scrollChildIntoViewFn = (parentRef: RefObject<HTMLElement>) => (index: number): void => scrollChildIntoView(parentRef.current, index)
 
 export interface NavProps {
     categories: Array<VM.Category>;
@@ -32,7 +23,7 @@ const Nav: FunctionComponent<NavProps> = ({
                 return (
                     <a
                         key={id}
-                        href={`#${name}`} // TODO
+                        href={`#${name}`}
                         style={{ color: activeIndex === index ? 'var(--cl-accent)' : 'inherit' }}
                         onClick={(): void => onNavigation(index)}
                     >

@@ -1,6 +1,6 @@
 import { FunctionComponent, h, Fragment } from 'preact';
 
-// TODO: HOC
+// TODO: HOC to provide categories data
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
 export interface WithDataProps {
 

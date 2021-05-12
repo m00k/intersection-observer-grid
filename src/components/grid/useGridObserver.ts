@@ -3,10 +3,11 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'preact/hooks'
 
 // https://github.com/iamdustan/smoothscroll/blob/master/src/smoothscroll.js#L19
 const SCROLL_TIME = 468 * 2 // add some buffer
-
+const THRESHOLD = [0, 0.2, 0.4, 0.6, 0.8, 1]
 type IndexChangedHandler = (index: number) => void;
+type KeyAccessor<T> = (entry: IntersectionObserverEntry) => T
+const keyAccessor: KeyAccessor<number> = e => +((e.target as HTMLElement)?.dataset?.id || 0)
 
-const threshold = [0, 0.2, 0.4, 0.6, 0.8, 1]
 const useIntersectionObserver = (
     callback: IntersectionObserverCallback,
     containerRef?: RefObject<Element>,
@@ -22,7 +23,7 @@ const useIntersectionObserver = (
 
 const calcIndexWithMaxIntersectionRatio = (intersectionEntries: Map<number, IntersectionObserverEntry>): number => {
     let resultValue: IntersectionObserverEntry | undefined;
-    let resultKey = 0; // TODO: proper initialization
+    let resultKey = 0;
     intersectionEntries.forEach((entry, key) => {
         if (!resultValue) {
             resultValue = resultValue || entry
@@ -41,9 +42,6 @@ const calcIndexWithMaxIntersectionRatio = (intersectionEntries: Map<number, Inte
     })
     return resultKey as number;
 }
-
-type KeyAccessor<T> = (entry: IntersectionObserverEntry) => T
-const keyAccessor: KeyAccessor<number> = e => +((e.target as HTMLElement)?.dataset?.id || 0)
 
 export const useGridObserver = (
     initialIndex: number,
@@ -73,7 +71,7 @@ export const useGridObserver = (
     const observer = useIntersectionObserver(
         handleBodyIntersection,
         containerRef,
-        { threshold },
+        { threshold: THRESHOLD },
     );
     const bodySectionRefCallback: RefCallback<HTMLElement> = useCallback(r => (r && observer.observe(r)), [observer])
 
@@ -94,7 +92,7 @@ export const useGridObserver = (
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
-    useEffect(() => console.log('########## active index', activeIndex), [activeIndex])
+    useEffect(() => console.log('### active index', activeIndex), [activeIndex])
 
     return [activeIndex, bodySectionRefCallback, handleNavigation]
 }
