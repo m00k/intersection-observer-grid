@@ -8,19 +8,6 @@ type IndexChangedHandler = (index: number) => void;
 type KeyAccessor<T> = (entry: IntersectionObserverEntry) => T
 const keyAccessor: KeyAccessor<number> = e => +((e.target as HTMLElement)?.dataset?.id || 0)
 
-const useIntersectionObserver = (
-    callback: IntersectionObserverCallback,
-    containerRef?: RefObject<Element>,
-    pOptions?: Omit<IntersectionObserverInit, 'root'>,
-): IntersectionObserver => {
-    return useMemo(() => {
-        const options = { ...pOptions, root: containerRef?.current }
-        return new IntersectionObserver(callback, options)
-    // NOTE: adding pOptions will re-render
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [callback, containerRef])
-}
-
 const calcIndexWithMaxIntersectionRatio = (intersectionEntries: Map<number, IntersectionObserverEntry>): number => {
     let resultValue: IntersectionObserverEntry | undefined;
     let resultKey = 0;
@@ -68,11 +55,13 @@ export const useGridObserver = (
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
-    const observer = useIntersectionObserver(
-        handleBodyIntersection,
-        containerRef,
-        { threshold: THRESHOLD },
-    );
+    const observer = useMemo(() => {
+        const observerOptions = { 
+            threshold: THRESHOLD,
+            root: containerRef?.current
+        }
+        return new IntersectionObserver(handleBodyIntersection, observerOptions)
+    }, [containerRef, handleBodyIntersection])
     const bodySectionRefCallback: RefCallback<HTMLElement> = useCallback(r => (r && observer.observe(r)), [observer])
 
     const handleNavigation: IndexChangedHandler = index => {
