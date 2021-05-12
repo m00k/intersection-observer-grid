@@ -1,7 +1,7 @@
 import { FunctionComponent, h } from 'preact';
 import { forwardRef } from 'preact/compat';
-import * as VM from '../../api/model';
-import style from './style.css';
+import * as VM from '../../../api/model';
+import style from '../styles/index.css';
 
 export interface NavProps {
     categories: Array<VM.Category>;

@@ -85,3 +85,5 @@ export const useGridObserver = (
 
     return [activeIndex, bodySectionRefCallback, handleNavigation] as const
 }
+
+export default useGridObserver

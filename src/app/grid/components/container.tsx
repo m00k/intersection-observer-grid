@@ -1,6 +1,6 @@
 import { ComponentChildren, FunctionComponent, h, RefObject } from 'preact';
 import { forwardRef } from 'preact/compat';
-import style from './style.css';
+import style from '../styles/index.css';
 
 export interface ContainerProps {
     children: ComponentChildren[];

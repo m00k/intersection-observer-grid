@@ -1,15 +1,16 @@
-import { Fragment, FunctionalComponent, h } from 'preact';
+import { Fragment, h, VNode } from 'preact';
 import { useRef } from 'preact/hooks';
 import { categories, categoriesWithItems } from '../../api';
-import Grid from '../../components/grid';
-import { scrollNavItemIntoViewFn } from '../../components/grid/nav.service';
-import { useGridObserver } from '../../components/grid/useGridObserver';
-import locationHashToIndex from './locationHashToIndex';
+import Grid from './components';
+import { scrollNavItemIntoViewFn, useGridObserver } from './services';
 
-const GridBlock: FunctionalComponent = () => {
+const GridBlock = ({
+    initialIndex
+}: {
+    initialIndex: number;
+}): VNode => {
     const containerRef = useRef<HTMLElement>()
     const navRef = useRef<HTMLElement>()
-    const initialIndex = locationHashToIndex()
     const [activeIndex, categoryRefCallback, onNavigation] = useGridObserver(initialIndex, scrollNavItemIntoViewFn(navRef), containerRef)
 
     return (
