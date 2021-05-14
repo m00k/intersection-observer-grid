@@ -41,7 +41,9 @@
 - [Element.scrollIntoViewIfNeeded](https://developer.mozilla.org/en-US/docs/Web/API/Element/scrollIntoViewIfNeeded) - iOS
 - [iOS does not support scrollTo with smooth behavior](https://caniuse.com/mdn-api_scrolltooptions_behavior)
 - [smoothscroll-polyfill](https://www.npmjs.com/package/smoothscroll-polyfill)
+- [sticky: performance & accessability](https://developer.mozilla.org/en-US/docs/Web/CSS/position#performance_accessibility)
 - ~~TODO: investigate how to update intersection entries ref in a scenario where list items are being added/removed dynamically~~ -> refCallback
+- [flickering bug for webkit](https://bugzilla.mozilla.org/show_bug.cgi?id=1585378)
 
 ## CLI Commands
 *   `npm install`: Installs dependencies
