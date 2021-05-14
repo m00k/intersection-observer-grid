@@ -34,7 +34,7 @@ export const useGridObserver = (
     initialIndex: number,
     scrollNavIntoView: (index: number) => void,
     containerRef?: RefObject<HTMLElement>,
-): [
+): readonly [
     number,
     RefCallback<HTMLElement>,
     IndexChangedHandler,
@@ -83,5 +83,5 @@ export const useGridObserver = (
 
     useEffect(() => console.log('### active index', activeIndex), [activeIndex])
 
-    return [activeIndex, bodySectionRefCallback, handleNavigation]
+    return [activeIndex, bodySectionRefCallback, handleNavigation] as const
 }
