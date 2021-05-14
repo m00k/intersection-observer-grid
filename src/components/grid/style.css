@@ -5,17 +5,8 @@
 .category {
     color: var(--cl-accent);
     font-size: large;
+    scroll-margin-top: var(--nav-height);
     text-transform: uppercase;
-}
-
-.category > h3 {
-    padding-top: var(--nav-height);
-    margin-top: calc(-1 * var(--nav-height));
-}
-
-
-.container {
-
 }
 
 .nav {
