@@ -1,13 +1,17 @@
 import { Fragment, h, VNode } from 'preact';
 import { useRef } from 'preact/hooks';
-import { categories, categoriesWithItems } from '../../api';
+import * as VM from '../../api/model';
 import Grid from './components';
 import { scrollNavItemIntoViewFn, useGridObserver } from './services';
 
 const GridBlock = ({
-    initialIndex
+    initialIndex,
+    categories,
+    categoriesWithItems,
 }: {
     initialIndex: number;
+    categories: VM.Category[];
+    categoriesWithItems: Array<Array<VM.Item>>;
 }): VNode => {
     const containerRef = useRef<HTMLElement>()
     const navRef = useRef<HTMLElement>()

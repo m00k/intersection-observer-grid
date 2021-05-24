@@ -12,7 +12,10 @@ const Container: FunctionComponent<ContainerProps> = (
 ) => {
     const { children, ...restProps } = props
     return (
-        <article ref={ref} class={style.container} {...{ restProps }}>
+        <article
+            ref={ref} class={style.container}
+            {...{ restProps }}
+        >
             {children}
         </article>
     );
